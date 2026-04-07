@@ -1,0 +1,118 @@
+sd3_pipe_id: "stabilityai/stable-diffusion-3.5-medium"
+dtype: "bfloat16"
+
+# Tokenizer-DAVAE training with Residual-Guided Loss Scheduling
+
+tokenizer_patch_embed:
+  augment_mode: "branch"
+  reverse: true
+  # init_mode: "tile_divide"
+  # patch_size: 2
+  # out_channels: 24
+  # init_mode: "zero_pad"
+
+model:
+  use_tokenizer_vae: true
+  use_ema: true
+  use_ema_for_sampling: true
+  sample_both_ema_and_current: true
+  ema_decay: 0.999
+  ema_update_every: 1
+
+  # Sampling/inference
+  guidance_scale: 2.5
+  num_inference_steps: 30
+  prompt_dropout_prob: 0.1
+  full_finetune: false
+
+  # Sigma weighting (unchanged)
+  weighting_scheme: "logit_normal"
+  # logit_mean: 0.0
+  # logit_std: 1.0
+  # mode_scale: 1.29
+
+  # Residual-Guided Loss Scheduling (new)
+  use_residual_schedule: true
+  residual_warmup_steps: 10000   # cosine warmup steps for omega_t
+  residual_schedule_end_weight: 1.0    # final omega_t multiplier after warmup (defaults to 1.0)
+
+  # Optional additional weightings
+  use_min_snr_gamma: true
+  min_snr_gamma: 5.0
+  mid_loss_boost: false
+
+  tokenizer_vae:
+    wrapper_class: "modeling.sd3_da_vae_wrapper.SD3DAVAEWrapper"
+    # 开源版：请将 DAVAE 的训练产物（config.yaml + 权重）放到你自己的路径，并在此处填写
+    # 也可通过 tokenizer_vae.repo_path / 环境变量 SR_TOKENIZER_PATH 指定额外的代码搜索路径（通常不需要）
+    config_path: "checkpoints/sd3_davae/config.yaml"
+    checkpoint_path: "checkpoints/sd3_davae/pytorch_model.bin"
+    switch_to_eval: true
+    apply_latent_normalization: true
+
+data:
+  base_size: 2048
+
+  local_train:
+    enabled: true
+    image_dir: "/path/to/your/dataset"
+    batch_size: 6
+    num_workers: 6
+    load_mode: "bucket"
+    load_text: true
+    caption_json_key: "prompt"
+    max_samples: 100000000
+    step_per_epoch: 1000000
+
+  local_eval:
+    enabled: true
+    image_dir: "/path/to/your/dataset"
+    max_samples: 200
+    batch_size: 4
+    num_workers: 4
+    load_mode: "bucket"
+    load_text: true
+    caption_json_key: "prompt"
+
+train:
+  save_path: "runs"
+  run_name: "text_image_da_vae-2048-with-lora-diff-sd35-local-residual-new"
+  accumulate_grad_batches: 2
+  gradient_checkpointing: true
+  log_every_n_steps: 1
+  sample_interval: 200
+  save_interval: 500
+  max_steps: 2000000
+  pretrain_sample: true
+  use_lightning_resume: false
+  auto_resume: true
+  reset_ema_after_load: true
+  resume_from_checkpoint: null
+  resume_from_lora_checkpoint: null
+  wandb:
+    project: "sd3-da-vae-2048-with-lora-diff-sd35-local-residual-new"
+    name: "text_image_da_vae-2048-with-lora-diff-sd35-local-residual-new"
+
+  # LoRA settings
+  lora_config:
+    adapter_name: "default"
+    r: 256
+    lora_alpha: 256
+    init_lora_weights: "gaussian"
+    target_modules:
+      - "to_q"
+      - "to_k"
+      - "to_v"
+      - "to_out.0"
+      - "ff.net.2"
+      - "norm1.linear"
+
+  optimizer:
+    type: "AdamW"
+    params:
+      lr: 1e-4
+      weight_decay: 0.0
+      betas: [0.9, 0.999]
+      eps: 1.0e-8
+
+

@@ -1,0 +1,19 @@
+# Inference stack
+torch
+torchvision
+diffusers
+transformers
+accelerate
+safetensors
+
+# Image utils
+Pillow
+numpy
+tqdm
+
+
+
+
+
+
+

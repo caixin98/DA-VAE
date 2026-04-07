@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Training outputs
+outputs/
+runs/
+wandb/
+logs/
+*.log
+
+# Checkpoints (users download separately)
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+
+# Data
+*.tar
+*.tar.gz
+*.zip

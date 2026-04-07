@@ -1,0 +1,71 @@
+sd3_pipe_id: "stabilityai/stable-diffusion-3.5-medium"
+dtype: "bfloat16"
+
+# Tokenizer-DAVAE inference configuration
+# Based on training config: token_text_image_da_vae_with_lora_diff_sd35_local_residual_new_2k.yaml
+
+tokenizer_patch_embed:
+  augment_mode: "branch"
+  reverse: true
+
+model:
+  use_tokenizer_vae: true
+  use_ema: true
+  use_ema_for_sampling: true
+  sample_both_ema_and_current: true
+  ema_decay: 0.999
+  ema_update_every: 1
+
+  # Sampling/inference
+  guidance_scale: 2.5
+  num_inference_steps: 30
+  prompt_dropout_prob: 0.1
+  full_finetune: false
+
+  # Sigma weighting
+  weighting_scheme: "logit_normal"
+
+  # Residual-Guided Loss Scheduling
+  use_residual_schedule: true
+  residual_warmup_steps: 10000
+  residual_schedule_end_weight: 1.0
+
+  # Optional additional weightings
+  use_min_snr_gamma: true
+  min_snr_gamma: 5.0
+  mid_loss_boost: false
+
+  tokenizer_vae:
+    wrapper_class: "modeling.sd3_da_vae_wrapper.SD3DAVAEWrapper"
+    # DA-VAE 配置和权重路径
+    # config_path: DA-VAE 训练配置文件
+    # checkpoint_path: 可以是目录（包含 Accelerator state）或单个权重文件
+    config_path: "checkpoints/sd3_davae/config.yaml"
+    checkpoint_path: "davae/davae-sd3-ckpt"  # 使用目录路径，支持 Accelerator state 加载
+    switch_to_eval: true
+    apply_latent_normalization: true
+
+data:
+  base_size: 2048
+
+train:
+  save_path: "runs"
+  run_name: "text_image_da_vae-2048-with-lora-diff-sd35-local-residual-new"
+  # 推理时可以通过命令行参数指定检查点路径
+  # resume_from_checkpoint: null
+  # resume_from_lora_checkpoint: null
+
+  # LoRA settings
+  lora_config:
+    adapter_name: "default"
+    r: 256
+    lora_alpha: 256
+    init_lora_weights: "gaussian"
+    target_modules:
+      - "to_q"
+      - "to_k"
+      - "to_v"
+      - "to_out.0"
+      - "ff.net.2"
+      - "norm1.linear"
+

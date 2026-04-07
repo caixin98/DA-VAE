@@ -1,0 +1,102 @@
+# DA-VAE configuration (f16→f32, D=96 detail channels)
+# ckpt_path: /path/to/your/davae_checkpoint.ckpt
+model:
+  base_learning_rate: 1.0e-04
+  target: ldm.models.da_autoencoder.DAVAE
+  params:
+    monitor: val/rec_loss
+
+    # Base (pretrained, frozen) VA-VAE encoder checkpoint
+    base_ckpt_path: /path/to/your/vavae-imagenet256-f16d32-dinov2.pt
+    # DA-VAE detail encoder/decoder checkpoint
+    da_ckpt_path: /path/to/your/davae_checkpoint.ckpt
+
+    # Latent sizes
+    base_embed_dim: 32
+
+    # Loss (LPIPS + GAN)
+    lossconfig:
+      target: ldm.modules.losses.LPIPSWithDiscriminator
+      params:
+        disc_start: 500001
+        kl_weight: 1.0e-06
+        disc_weight: 0.1
+        adaptive_vf: true
+        vf_weight: 0.0
+        distmat_margin: 0.25
+        cos_margin: 0.5
+        pp_style: true
+
+    # Base encoder config (frozen)
+    ddconfig_base:
+      double_z: true
+      z_channels: 32
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult:
+      - 1
+      - 1
+      - 2
+      - 2
+      - 4
+      num_res_blocks: 2
+      attn_resolutions:
+      - 16
+      dropout: 0.0
+
+    # Detail encoder config (trainable)
+    ddconfig_da:
+      double_z: true
+      z_channels: 32
+      resolution: 512
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult:
+      - 1
+      - 1
+      - 2
+      - 2
+      - 4
+      num_res_blocks: 2
+      attn_resolutions:
+      - 32
+      dropout: 0.0
+
+    # DA-VAE model options
+    enable_deep_compress: true
+    upsample_interpolation: nearest
+
+data:
+  target: main.DataModuleFromConfig
+  imagefolder_val_path: /path/to/imagenet/ILSVRC2012_val
+  imagefolder_train_path: /path/to/imagenet/ILSVRC2012_train/data
+  params:
+    batch_size: 16
+    wrap: true
+    train:
+      target: ldm.data.imagenet.ImageNetTrain
+      params:
+        data_root: /path/to/imagenet
+    validation:
+      target: ldm.data.imagenet.ImageNetValidation
+      params:
+        data_root: /path/to/imagenet
+
+lightning:
+  trainer:
+    devices: 8
+    num_nodes: 1
+    strategy: ddp_find_unused_parameters_true
+    accelerator: gpu
+    max_epochs: 50
+    precision: bf16
+    val_check_interval: 5000
+    log_every_n_steps: 1
+    limit_val_batches: 100
+
+  callbacks:
+    metrics_over_trainsteps_checkpoint:
+      every_n_train_steps: 5000

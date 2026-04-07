@@ -1,0 +1,57 @@
+# VA-VAE baseline configuration (f16, C=32)
+# Used as the base model for DA-VAE
+ckpt_path: /path/to/your/vavae-imagenet256-f16d32-dinov2.pt
+
+model:
+  base_learning_rate: 1.0e-04
+  target: ldm.models.autoencoder.AutoencoderKL
+  params:
+    monitor: val/rec_loss
+    embed_dim: 32
+    use_vf: dinov2
+    reverse_proj: true
+    lossconfig:
+      target: ldm.modules.losses.LPIPSWithDiscriminator
+      params:
+        disc_start: 1
+        kl_weight: 1.0e-06
+        disc_weight: 0.5
+        vf_weight: 0.1
+        adaptive_vf: true
+        vf_loss_type: combined_v3
+        distmat_margin: 0.25
+        cos_margin: 0.5
+
+    ddconfig:
+      double_z: true
+      z_channels: 32
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      ch_mult:
+      - 1
+      - 1
+      - 2
+      - 2
+      - 4
+      num_res_blocks: 2
+      attn_resolutions:
+      - 16
+      dropout: 0.0
+
+data:
+  target: main.DataModuleFromConfig
+  imagefolder_val_path: /path/to/imagenet/ILSVRC2012_val
+  imagefolder_train_path: /path/to/imagenet/ILSVRC2012_train/data
+  params:
+    batch_size: 16
+    wrap: true
+    train:
+      target: ldm.data.imagenet.ImageNetTrain
+      params:
+        data_root: /path/to/imagenet
+    validation:
+      target: ldm.data.imagenet.ImageNetValidation
+      params:
+        data_root: /path/to/imagenet

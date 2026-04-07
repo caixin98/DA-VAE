@@ -1,0 +1,89 @@
+# Final configuration used in CVPR2026 paper
+# This config uses detail_align_mean mode with channel loss schedule
+# Final FID: 1.68 (at step 140000 with cfg_scale=4.0, cfg_interval_start=0.2)
+ckpt_path: '/path/to/your/checkpoint.pt'
+
+data:
+  data_path: '/path/to/imagenet/latents/da_f16d32_piat_detail_align_mean/imagenet_train_512/'
+  fid_reference_file: '/path/to/VIRTUAL_imagenet512_labeled.npz'
+  image_size: 512
+  num_classes: 1000
+  num_workers: 8
+  latent_norm: True
+  latent_multiplier: 1.0
+
+vae:
+  model_name: 'da_f16d32_piat_detail_align_mean'
+  downsample_ratio: 32
+
+model:
+  model_type: LightningDiT-XL/1
+  use_qknorm: true
+  use_swiglu: true
+  use_rope: true
+  use_rmsnorm: true
+  wo_shift: false
+  in_chans: 128
+
+train:
+  max_steps: 1000000
+  global_batch_size: 640
+  global_seed: 0
+  output_dir: 'output'
+  exp_name: 'lightningdit_xl_davae_f32d128_detail_align_mean_loss_schedule'
+  ckpt: null
+  log_every: 100
+  ckpt_every: 5000
+  sample_every: 1000
+  weight_init: /path/to/your/lightningdit-xl-imagenet256-800ep.pt
+  freeze_dit: false
+  weight_init_adapt_mode: 'zero_pad'
+
+  channel_loss_schedule:
+    enabled: true
+    anchor_channel: 32        # 从第 32 个通道开始加权
+    start_weight: 0.0         # 初始额外权重
+    end_weight: 1.0           # 目标额外权重
+    start_step: 0             # 开始升权的步数
+    end_step: 20000           # 结束升权的步数
+    schedule: cosine          # 支持 linear / cosine
+    base_weight: 1.0  
+
+  # freeze_x_embedder: true
+  # init_x_embedder_from_vae: true
+optimizer:
+  lr: 0.0002
+  beta2: 0.95
+
+transport:
+  path_type: Linear
+  prediction: velocity
+  loss_weight: null
+  sample_eps: null
+  train_eps: null
+  use_cosine_loss: true
+  use_lognorm: true
+
+sample:
+  mode: ODE
+  sampling_method: euler
+  atol: 0.000001
+  rtol: 0.001
+  reverse: false
+  likelihood: false
+  num_sampling_steps: 250
+  cfg_scale: 4.0
+  per_proc_batch_size: 4
+  fid_num: 50000
+  cfg_interval_start: 0.2
+  timestep_shift: 0.3
+
+wandb:
+  project: lightningdit-xl-davae-f32d128-detail-align-mean_loss_schedule
+  name: lightningdit_xl_davae_f32d128_detail_align_mean_loss_schedule
+
+
+# Training history and results:
+# - Step 50000: FID 2.11 (cfg_scale=4.0, cfg_interval_start=0.2)
+# - Step 140000: FID 1.68 (cfg_scale=4.0, cfg_interval_start=0.2) <- Final reported result
+# - Step 140000: FID 4.84 (without cfg)

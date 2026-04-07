@@ -1,0 +1,74 @@
+experiment:
+    project: "sd3_da_vae"
+    name: "sd3_da_vae_run1"
+    output_dir: "sd3_da_vae_run1"
+    max_train_examples: 685_800
+    save_every: 500
+    eval_every: 500
+    generate_every: 200
+    log_every: 10
+    log_grad_norm_every: 20
+    resume: True
+
+model:
+    tokenizer_type: "sd3_da_vae"
+    sd3_model_path: "stabilityai/stable-diffusion-3-medium-diffusers"
+    enable_gradient_checkpointing: True
+    vq_model:
+        quantize_mode: vae
+
+losses:
+    use_adversarial_loss: False
+    perceptual_loss: "lpips-convnext_s-1.0-0.1"
+    perceptual_weight: 1.0
+    reconstruction_loss: "l1"
+    reconstruction_weight: 2.0
+    lecam_regularization_weight: 0.001
+    kl_weight: 1e-7
+    logvar_init: 0.0
+    use_patch_based_perceptual: True
+
+optimizer:
+    name: adamw
+    params:
+        learning_rate: 1e-5
+        discriminator_learning_rate: 0.0
+        beta1: 0.9
+        beta2: 0.99
+        weight_decay: 1e-4
+        skip_discriminator_optimizer_when_lr_zero: True
+
+lr_scheduler:
+    scheduler: "cosine"
+    params:
+        learning_rate: ${optimizer.params.learning_rate}
+        warmup_steps: 1_000
+        end_lr: 1e-5
+
+training:
+    gradient_accumulation_steps: 2
+    mixed_precision: "bf16"
+    enable_tf32: True
+    enable_wandb: True
+    use_ema: False
+    seed: 42
+    max_train_steps: 650000
+    num_generated_images: 2
+    max_grad_norm: 1.0
+    per_gpu_batch_size: 16
+    enable_gradient_visualization: False
+
+# Replace with your local dataset paths
+local_train:
+    enabled: True
+    image_dir: "/path/to/your/training/images"
+    max_samples: 1_000_000
+    batch_size: 2
+    num_workers: 2
+
+local_eval:
+    enabled: True
+    max_samples: 250
+    image_dir: "/path/to/your/validation/images"
+    batch_size: 1
+    num_workers: 1

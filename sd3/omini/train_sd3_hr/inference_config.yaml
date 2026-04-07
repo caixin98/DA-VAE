@@ -1,0 +1,61 @@
+# SD3 HR 推理配置文件
+
+# 基础模型配置
+sd3_pipe_id: "stabilityai/stable-diffusion-3-medium-diffusers"
+dtype: "bfloat16"
+
+# HR配置
+hr_patch_embed:
+  downsample_factor: 2
+
+# 模型配置
+model:
+  use_hr_transformer: true
+  guidance_scale: 3.5
+  num_inference_steps: 28
+  sample_size: 1024
+
+# 推理配置
+inference:
+  # 默认推理参数
+  default_steps: 28
+  default_guidance_scale: 3.5
+  default_size: 1024
+  
+  # 输出配置
+  output_dir: "./inference_output"
+  save_format: "jpg"
+  quality: 95
+  
+  # 批处理配置
+  batch_size: 1
+  max_prompts: 10
+
+# 检查点配置（可选）
+checkpoint:
+  # 自动检测最新检查点
+  auto_detect: true
+  # 检查点目录
+  checkpoint_dir: "./runs/token_text_image_hr_no_lora_sigma-sqrt/checkpoints"
+  # 检查点文件名模式
+  checkpoint_pattern: "step_*.pt"
+  # 最新检查点文件名
+  latest_checkpoint: "latest.pt"
+
+# LoRA配置（可选）
+lora:
+  # LoRA检查点目录
+  lora_dir: "./runs/token_text_image_hr_no_lora_sigma-sqrt/lora_weights"
+  # LoRA检查点模式
+  lora_pattern: "lora_step_*"
+  # 最新LoRA检查点
+  latest_lora: "latest"
+
+# 示例提示词
+sample_prompts:
+  - "A cat sitting on a windowsill, high detail photo"
+  - "A futuristic city at night in heavy rain, neon lights, 4k"
+  - "A scenic mountain lake at sunrise, ultra-detailed landscape"
+  - "Portrait of an astronaut in a forest, cinematic lighting, 85mm"
+  - "A translucent jellyfish drifts gracefully through the deep ocean"
+  - "Rolling green hills transition into a vast mountain range"

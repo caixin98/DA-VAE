@@ -1,0 +1,30 @@
+# Core dependencies for SD3 DC-VAE training
+torch>=1.9.0
+accelerate>=0.20.0
+omegaconf>=2.1.0
+diffusers>=0.21.0
+transformers>=4.30.0
+
+# Data loading
+webdataset
+iopath
+
+# Image processing
+Pillow>=8.3.0
+albumentations
+kornia
+scikit-image
+
+# Loss functions
+elatentlpips
+
+# Utilities
+numpy>=1.21.0
+matplotlib>=3.5.0
+tqdm>=4.62.0
+tensorboard
+
+# Optional but recommended
+open_clip_torch
+huggingface_hub>=0.23.0
+

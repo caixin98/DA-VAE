@@ -1,0 +1,27 @@
+experiment:
+  project: "sd3_da_vae"
+  name: "sd3_da_vae_inference"
+  output_dir: "./"
+
+training:
+  mixed_precision: "bf16"
+  gradient_accumulation_steps: 1
+  log_with: null
+
+model:
+  # Base SD3 diffusers model path (used to load the SD3 VAE architecture/weights).
+  sd3_model_path: "stabilityai/stable-diffusion-3-medium-diffusers"
+  enable_gradient_checkpointing: false
+  
+  # DA-VAE configuration
+  # IMPORTANT: this checkpoint layout matches da_mode="diff".
+  # With SD3 VAE latent_channels=16 and da_factor=2:
+  # - dc_down outputs 2 * embed_dim_dc = 2 * (latent_channels * (da_factor-1)) = 32
+  # - dc_down.conv_out_channels becomes 32 / r^2 = 8 (matches ckpt dc_down.conv.weight [8, 512, 3, 3])
+  # - dc_up input channels are latent_channels * da_factor = 32 (matches ckpt dc_up.conv.weight [..., 32, 3, 3])
+  da_mode: "diff"
+  da_factor: 2
+
+losses: {}
+
+

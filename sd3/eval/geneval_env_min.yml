@@ -1,0 +1,28 @@
+name: geneval
+channels:
+  - pytorch
+  - nvidia/label/cuda-11.3.0
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - numpy
+  - pandas
+  - pillow
+  - pyyaml
+  - requests
+  # Avoid pip building sentencepiece from source (common failure on clusters).
+  # NOTE: sentencepiece 0.2.1 on conda-forge may require glibc>=2.28, which fails on CentOS7.
+  - sentencepiece=0.1.99
+  - pytorch=1.12.1
+  - torchvision=0.13.1
+  - cudatoolkit=11.3.1
+  - ffmpeg
+  - pip:
+      # Keep pip deps minimal and avoid `nvidia-*` wheels that often fail on clusters.
+      - open-clip-torch==2.20.0
+      - clip-benchmark==1.4.0
+      - clip-anytorch==2.5.2
+      - openmim==0.3.7
+
