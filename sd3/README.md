@@ -45,19 +45,32 @@ pip install -r requirements.txt
 
 ### Stage 1: Train DA-VAE Tokenizer
 
+Train the detail encoder/decoder on top of the pretrained SD3 VAE:
+
 ```bash
-# Using Accelerate
-OMINI_CONFIG=train/config/sd3_da/token_text_image_da_vae_with_lora_diff_sd35_local_residual_new_2k.yaml \
-  accelerate launch -m omini.train_sd3_davae.train_sd3_tokenizer
+accelerate launch davae/scripts/train_dititok.py \
+  --config_path davae/configs/training/SD3DAVAE/base.yaml
+```
+
+Edit dataset paths in `davae/configs/training/SD3DAVAE/base.yaml`:
+
+```yaml
+local_train:
+    image_dir: "/path/to/your/training/images"   # e.g. SAM dataset
+local_eval:
+    image_dir: "/path/to/your/validation/images"
 ```
 
 ### Stage 2: Fine-tune SD3.5M with LoRA
 
+After DA-VAE is trained, fine-tune the SD3.5M diffusion backbone on the new structured latent space:
+
 ```bash
-bash train/script/sd3_da/token_text_image_da_vae_with_lora_sd35_local_residual_2k_ddp.sh
+OMINI_CONFIG=train/config/sd3_da/token_text_image_da_vae_with_lora_diff_sd35_local_residual_new_2k.yaml \
+  bash train/script/sd3_da/token_text_image_da_vae_with_lora_sd35_local_residual_2k_ddp.sh
 ```
 
-The training script uses:
+The fine-tuning uses:
 - **Zero-initialized patch embedder** for detail channels (paper Section 3.2)
 - **Cosine loss scheduling** for gradual detail channel adaptation (Eq. 12–13)
 - **LoRA** (rank=256) on attention and FFN layers
@@ -68,12 +81,12 @@ Edit paths in `train/config/sd3_da/token_text_image_da_vae_with_lora_diff_sd35_l
 
 ```yaml
 tokenizer_vae:
-  config_path: "checkpoints/sd3_davae/config.yaml"
-  checkpoint_path: "checkpoints/sd3_davae/pytorch_model.bin"
+  config_path: "checkpoints/sd3_davae/config.yaml"        # DA-VAE config from Stage 1
+  checkpoint_path: "checkpoints/sd3_davae/pytorch_model.bin"  # DA-VAE weights from Stage 1
 
 data:
   local_train:
-    image_dir: "/path/to/your/dataset"
+    image_dir: "/path/to/your/dataset"    # synthetic data generated from DiffusionDB prompts
   local_eval:
     image_dir: "/path/to/your/dataset"
 ```

@@ -73,12 +73,13 @@ python evaluate_tokenizer.py \
 cd open_source/sd3
 pip install -r requirements.txt
 
-# Train DA-VAE tokenizer for SD3
-OMINI_CONFIG=train/config/sd3_da/token_text_image_da_vae_with_lora_diff_sd35_local_residual_new_2k.yaml \
-  accelerate launch -m omini.train_sd3_davae.train_sd3_tokenizer
+# Stage 1: Train DA-VAE tokenizer
+accelerate launch davae/scripts/train_dititok.py \
+  --config_path davae/configs/training/SD3DAVAE/base.yaml
 
-# Fine-tune SD3.5M with LoRA
-bash train/script/sd3_da/token_text_image_da_vae_with_lora_sd35_local_residual_2k_ddp.sh
+# Stage 2: Fine-tune SD3.5M with LoRA on the DA-VAE latent space
+OMINI_CONFIG=train/config/sd3_da/token_text_image_da_vae_with_lora_diff_sd35_local_residual_new_2k.yaml \
+  bash train/script/sd3_da/token_text_image_da_vae_with_lora_sd35_local_residual_2k_ddp.sh
 ```
 
 See individual subdirectory READMEs for detailed instructions.
