@@ -16,7 +16,7 @@ sd3/
 ├── utils/                 # Training utilities (logger, LR schedulers, etc.)
 ├── data/                  # Data loaders (PIAT, local, bucket)
 ├── davae/                 # DA-VAE training for SD3
-│   ├── scripts/           # Training entry (train_dititok.py)
+│   ├── scripts/           # Training entry (train_davae.py)
 │   └── configs/           # DA-VAE training configs
 ├── omini/
 │   ├── config.py          # Shared config utilities
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 Train the detail encoder/decoder on top of the pretrained SD3 VAE:
 
 ```bash
-accelerate launch davae/scripts/train_dititok.py \
+accelerate launch davae/scripts/train_davae.py \
   --config_path davae/configs/training/SD3DAVAE/base.yaml
 ```
 

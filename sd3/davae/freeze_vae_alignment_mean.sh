@@ -10,7 +10,7 @@ TRAIN_DATA_DIR="/path/to/your/train/data"
 VAL_DATA_DIR="/path/to/your/val/data"
 
 # 启动训练
-accelerate launch --num_machines=1 --num_processes=8 --machine_rank=0 --main_process_ip=127.0.0.1 --main_process_port=9999 --same_network scripts/train_dititok.py config=configs/training/SD3DAVAE/base.yaml \
+accelerate launch --num_machines=1 --num_processes=8 --machine_rank=0 --main_process_ip=127.0.0.1 --main_process_port=9999 --same_network scripts/train_davae.py config=configs/training/SD3DAVAE/base.yaml \
     experiment.project="sd3_da_vae_run1_freeze_vae_alignment_mean" \
     experiment.name="sd3_da_vae_run1_freeze_vae_alignment_mean" \
     experiment.output_dir="sd3_da_vae_run1_freeze_vae_alignment_mean" \

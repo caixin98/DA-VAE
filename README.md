@@ -74,7 +74,7 @@ cd open_source/sd3
 pip install -r requirements.txt
 
 # Stage 1: Train DA-VAE tokenizer
-accelerate launch davae/scripts/train_dititok.py \
+accelerate launch davae/scripts/train_davae.py \
   --config_path davae/configs/training/SD3DAVAE/base.yaml
 
 # Stage 2: Fine-tune SD3.5M with LoRA on the DA-VAE latent space
