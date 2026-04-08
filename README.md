@@ -207,7 +207,7 @@ See individual subdirectory READMEs for detailed configuration guides.
 
 ## Acknowledgement
 
-This repository builds upon [LightningDiT](https://github.com/hustvl/LightningDiT), [Stable Diffusion 3](https://stability.ai/), and [open-muse](https://github.com/huggingface/open-muse). We thank the authors for their excellent work.
+This repository builds upon [LightningDiT](https://github.com/hustvl/LightningDiT), [DC-AE](https://github.com/dc-ai-projects/DC-Gen/blob/main/projects/DC-AE.md), and [Stable Diffusion 3](https://stability.ai/). We thank the authors for their excellent work.
 
 ## Citation
 
