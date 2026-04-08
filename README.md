@@ -2,14 +2,14 @@
 
 <div align="center">
 
-<a href="https://caixin98.github.io/" target="_blank">Xin Cai</a><sup>1,2*</sup>,&nbsp;
-<a href="https://zhiyuan-you.github.io/" target="_blank">Zhiyuan You</a><sup>2</sup>,&nbsp;
-<a href="https://zzutk.github.io/" target="_blank">Zhoutong Zhang</a><sup>2</sup>,&nbsp;
-<a href="https://tianfan.info/" target="_blank">Tianfan Xue</a><sup>2</sup>
+<a href="https://caixin98.github.io" target="_blank">Xin Cai</a><sup>1,3</sup>&emsp;
+<a href="https://zhiyuanyou.github.io" target="_blank">Zhiyuan You</a><sup>1</sup>&emsp;
+<a href="https://ztzhang.info" target="_blank">Zhoutong Zhang</a><sup>2†</sup>&emsp;
+<a href="https://tianfan.info" target="_blank">Tianfan Xue</a><sup>1,3,4</sup>
 
-<sup>1</sup>The Chinese University of Hong Kong&nbsp;&nbsp;<sup>2</sup>Tencent
+<sup>1</sup>Multimedia Laboratory, CUHK&emsp;<sup>2</sup>Adobe NextCam&emsp;<sup>3</sup>Shanghai AI Laboratory&emsp;<sup>4</sup>CPII under InnoHK
 
-<sup>*</sup>Work done during internship at Tencent
+<sup>†</sup>Project lead
 
 [![arXiv](https://img.shields.io/badge/Arxiv-2603.22125-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2603.22125)
 [![Project Page](https://img.shields.io/badge/Project-Page-blue.svg)](https://caixin98.github.io/davae)
@@ -19,7 +19,7 @@
 </div>
 
 <div align="center">
-  <img src="https://caixin98.github.io/davae/static/images/teaser.png" width="100%">
+  <img src="assets/teaser.png" width="100%">
   <br>
   <em>DA-VAE generates 1024×1024 images with only 32×32 tokens on SD3.5-Medium, achieving ~4× speedup.</em>
 </div>
@@ -36,7 +36,7 @@
 Current diffusion models need an impractical number of tokens for high-resolution generation, while existing high-compression tokenizers require retraining the diffusion backbone from scratch. **DA-VAE** offers a plug-in alternative: it upgrades a pretrained VAE into a structured **base+detail** latent with higher compression, then fine-tunes the diffusion model on top — preserving what was already learned.
 
 <div align="center">
-  <img src="https://caixin98.github.io/davae/static/images/method.png" width="90%">
+  <img src="assets/method.jpg" width="90%">
   <br>
   <em>Overview of DA-VAE. Left: structured base+detail latent with alignment loss. Right: zero-init warm-start for DiT adaptation.</em>
 </div>
