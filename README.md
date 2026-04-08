@@ -11,7 +11,7 @@
 
 <sup>*</sup>Work done during internship at Tencent
 
-[![arXiv](https://img.shields.io/badge/Arxiv-2506.xxxxx-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2506.xxxxx)
+[![arXiv](https://img.shields.io/badge/Arxiv-2603.22125-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2603.22125)
 [![Project Page](https://img.shields.io/badge/Project-Page-blue.svg)](https://caixin98.github.io/davae)
 [![GitHub Stars](https://img.shields.io/github/stars/caixin98/DA-VAE.svg?style=social)](https://github.com/caixin98/DA-VAE)
 ![visitors](https://visitor-badge.laobi.icu/badge?page_id=caixin98.DA-VAE)
