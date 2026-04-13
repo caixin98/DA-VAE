@@ -21,7 +21,6 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from omini.train_sd3_srtitok.train_sd3_srtitok import get_config
 from omini.train_sd3_hr.trainer import SD3HRModel
 
 

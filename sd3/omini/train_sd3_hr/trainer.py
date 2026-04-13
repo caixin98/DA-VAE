@@ -219,6 +219,11 @@ class SD3HRModel(L.LightningModule):
             use_hr = False
 
         elif use_hr:
+            if create_sd3_transformer_wrapper_hr is None:
+                raise ImportError(
+                    "HR transformer wrapper is not available. "
+                    "Set model.use_hr_transformer=false or provide sd3_transformer_wrapper_hr module."
+                )
             self.transformer = create_sd3_transformer_wrapper_hr(
                 transformer=self.sd3_pipe.transformer,
                 patch_embed_cfg=patch_embed_cfg,

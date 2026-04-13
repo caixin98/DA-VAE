@@ -73,21 +73,16 @@ model:
     enable_deep_compress: true
     upsample_interpolation: nearest
 
-# Optional parquet 数据（使用 local_datasets/ms_data.py 的加载逻辑）
+# Data module configuration
+# Replace with your own DataModule that loads image data for training.
+# Example: use a PyTorch Lightning DataModule that provides (image, label) batches.
 data:
-  target: local_datasets.ms_data.MsParquetDataModule
+  target: ldm.data.base.Txt2ImgIterableBaseDataset
   params:
-    data_dir: /path/to/your/imagenet/parquet/data
-    # NOTE: 512px + LPIPS/GAN is very memory hungry; 16 per GPU can OOM even on 80GB cards.
-    # Reduce per-process batch size to make the run stable; adjust/accumulate as needed.
+    data_dir: /path/to/your/imagenet/data
     batch_size: 8
     image_size: 512
     num_workers: 8
-    shuffle_train: true
-    drop_last: true
-    pin_memory: true
-    val_split: validation
-    test_split: test
 
 
 lightning:

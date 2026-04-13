@@ -3,7 +3,8 @@
 # 设置环境变量
 # 请根据你的实际路径修改
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export PYTHONPATH=$PYTHONPATH:$SCRIPT_DIR
+SD3_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+export PYTHONPATH=$PYTHONPATH:$SD3_ROOT
 
 # 训练数据目录 - 请根据你的实际路径修改
 TRAIN_DATA_DIR="/path/to/your/train/data"

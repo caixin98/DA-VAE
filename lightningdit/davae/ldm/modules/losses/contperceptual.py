@@ -6,7 +6,13 @@ import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange
 
-from taming.modules.losses.vqperceptual import *  # TODO: taming dependency yes/no?
+try:
+    from taming.modules.losses.vqperceptual import *
+except ImportError:
+    raise ImportError(
+        "taming-transformers is required. "
+        "Install via: pip install taming-transformers-rom1504"
+    )
 
 
 class LPIPSWithDiscriminator(nn.Module):

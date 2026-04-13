@@ -113,26 +113,26 @@ pip install -r requirements.txt
 
 ```
 DA-VAE/
-├── lightningdit/              # ImageNet experiments (Section 4.1)
-│   ├── train.py               # DiT fine-tuning with DA-VAE
-│   ├── inference.py           # Class-conditional sampling
-│   ├── evaluate_tokenizer.py  # rFID / PSNR / LPIPS / SSIM
-│   ├── models/                # LightningDiT transformer
-│   ├── tokenizer/             # DA-VAE and VA-VAE wrappers
-│   ├── davae/                 # DA-VAE core (LDM-based encoder/decoder)
-│   ├── transport/             # Rectified flow ODE/SDE sampling
-│   └── configs/               # Training configurations
+├── lightningdit/                # ImageNet experiments (Section 4.1)
+│   ├── train.py                 # DiT fine-tuning with DA-VAE latent
+│   ├── inference.py             # Class-conditional sampling
+│   ├── evaluate_tokenizer.py    # rFID / PSNR / LPIPS / SSIM
+│   ├── models/                  # LightningDiT transformer (SwiGLU, RoPE, RMSNorm)
+│   ├── tokenizer/               # DA-VAE and VA-VAE inference wrappers
+│   ├── davae/                   # DA-VAE core (LDM encoder/decoder + alignment)
+│   ├── transport/               # Rectified flow ODE/SDE sampling
+│   └── configs/                 # Training configurations
 │
-└── sd3/                       # SD3.5 text-to-image experiments (Section 4.2)
-    ├── modeling/               # SD3 DA-VAE model modules
-    ├── davae/                  # DA-VAE tokenizer training
+└── sd3/                         # SD3.5 text-to-image experiments (Section 4.2)
+    ├── modeling/                 # SD3 DA-VAE model (encoder/decoder, losses, wrapper)
+    ├── davae/                    # DA-VAE tokenizer training scripts & configs
     ├── omini/
-    │   ├── train_sd3_davae/    # DA-VAE tokenizer training entry
-    │   ├── train_sd3_hr/       # SD3.5M LoRA fine-tuning
-    │   └── pipeline/           # Inference pipelines (zero-init wrapper)
-    ├── train/                  # Launch scripts and configs
-    ├── eval/                   # FID / GenEval evaluation
-    └── data/                   # Data loaders
+    │   ├── train_sd3_davae/      # DA-VAE tokenizer training with SD3
+    │   ├── train_sd3_hr/         # SD3.5M LoRA fine-tuning (zero-init + loss schedule)
+    │   └── pipeline/             # SD3 inference pipeline (zero-init patch embedder)
+    ├── train/                    # Launch scripts and configs for LoRA fine-tuning
+    ├── eval/                     # FID / GenEval / CLIP Score evaluation
+    └── data/                     # Data loaders (PIAT, local image, WebDataset)
 ```
 
 ## Usage

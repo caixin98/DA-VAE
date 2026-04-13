@@ -22,8 +22,14 @@ Reference:
 """
 import math
 import os
+import sys
 import argparse
 from pathlib import Path
+
+# Ensure sd3 root is on sys.path so that utils/data/modeling are importable
+_sd3_root = str(Path(__file__).resolve().parent.parent.parent)
+if _sd3_root not in sys.path:
+    sys.path.insert(0, _sd3_root)
 
 from accelerate.utils import set_seed
 from accelerate import Accelerator

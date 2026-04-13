@@ -1,4 +1,4 @@
-# SD3 open_source (davae + omini) 依赖合集（按需安装）
+# SD3 open_source (davae + omini) dependencies
 
 # core
 torch
@@ -29,11 +29,11 @@ scikit-image
 albumentations
 kornia
 
-# tokenizer/metrics (按你仓库实际使用情况保留)
+# tokenizer/metrics
 open_clip_torch
 elatentlpips
 
-# 若启用 datasets（某些旧脚本会 import），需要这些常见依赖
+# optional: datasets support
 datasets
 pandas
 python-dateutil

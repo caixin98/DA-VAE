@@ -19,12 +19,11 @@ torchdiffeq
 numpy==1.26.4
 #
 
-# taming-transformers
-# git clone https://github.com/CompVis/taming-transformers.git
-# cd taming-transformers
-# pip install -e .
-# wget https://huggingface.co/hustvl/lightningdit-xl-imagenet256-800ep/resolve/main/lightningdit-xl-imagenet256-800ep.pt -P checkpoints/
-# wget https://huggingface.co/hustvl/vavae-imagenet256-f16d32-dinov2/resolve/main/vavae-imagenet256-f16d32-dinov2.pt -P checkpoints/
+# taming-transformers (required for DA-VAE training with LPIPS+Discriminator loss)
+# pip install taming-transformers-rom1504
+# OR install from source:
+#   git clone https://github.com/CompVis/taming-transformers.git
+#   cd taming-transformers && pip install -e .
 
-# # use for reconstruction evaluation, optional
-# torchmetrics 
+# use for reconstruction evaluation, optional
+# torchmetrics
