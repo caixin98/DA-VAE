@@ -175,7 +175,7 @@ class LocalImageDataset(Dataset):
         # 加载原始图像
         image = Image.open(image_path).convert('RGB')
         
-        # 调整图像尺寸到 downsample_factor * 16 的倍数（与piat_loader保持一致）
+        # 调整图像尺寸到 downsample_factor * 16 的倍数
         image = self._adjust_image_size(image)
         
         # 转换为tensor
@@ -209,7 +209,7 @@ class LocalImageDataset(Dataset):
     
     def _create_cond_image(self, pil_image):
         """
-        创建可调节下采样倍率的条件图像（与piat_loader使用相同的方法）
+        创建可调节下采样倍率的条件图像
         
         Args:
             pil_image (PIL.Image): 原始PIL图像
@@ -217,7 +217,7 @@ class LocalImageDataset(Dataset):
         Returns:
             torch.Tensor: 下采样的条件图像tensor (CxHxW)
         """
-        # 根据下采样倍率进行下采样（与piat_loader中的transforms.Resize一致）
+        # 根据下采样倍率进行下采样
         cond_width = pil_image.width // self.downsample_factor
         cond_height = pil_image.height // self.downsample_factor
         cond_pil = transforms.Resize((cond_height, cond_width))(pil_image)
@@ -228,7 +228,7 @@ class LocalImageDataset(Dataset):
     
     def _adjust_image_size(self, pil_image):
         """
-        调整图像尺寸到 downsample_factor * 16 的倍数（与piat_loader保持一致）
+        调整图像尺寸到 downsample_factor * 16 的倍数（与local_image_loader保持一致）
         
         Args:
             pil_image (PIL.Image): 原始PIL图像
@@ -313,10 +313,9 @@ def create_local_train_dataloader(image_dir, batch_size=1, num_workers=0, max_sa
     return create_local_val_dataloader(image_dir, batch_size, num_workers, max_samples, seed, downsample_factor=downsample_factor)
 
 
-# 为了兼容现有的接口，提供与piat_loader相同的函数名
 def create_val_dataloader_from_local(config, image_dir=None, max_samples=None, seed=42, downsample_factor=2):
     """
-    从本地图像目录创建验证数据加载器（兼容piat_loader接口）
+    Create validation dataloader from local image directory.
     
     Args:
         config: 配置对象，包含dataloader.val的设置
@@ -352,7 +351,7 @@ def create_val_dataloader_from_local(config, image_dir=None, max_samples=None, s
 
 def create_train_dataloader_from_local(config, image_dir=None, max_samples=None, seed=42, downsample_factor=2):
     """
-    从本地图像目录创建训练数据加载器（兼容piat_loader接口）
+    Create training dataloader from local image directory.
     
     Args:
         config: 配置对象，包含dataloader.train的设置
@@ -430,6 +429,10 @@ def test_local_dataloader():
                 break
         
         print("本地数据加载器测试完成！")
+
+
+if __name__ == "__main__":
+    test_local_dataloader() 载器测试完成！")
 
 
 if __name__ == "__main__":

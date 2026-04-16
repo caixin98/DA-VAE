@@ -38,8 +38,8 @@ from accelerate.utils import DistributedDataParallelKwargs
 import torch
 from omegaconf import OmegaConf
 from utils.logger import setup_logger
-from data.piat_loader import create_train_dataloader, create_val_dataloader
-from data.local_image_loader import create_local_val_dataloader
+from data.local_image_loader import create_train_dataloader_from_local as create_train_dataloader
+from data.local_image_loader import create_val_dataloader_from_local as create_val_dataloader
 from utils.train_utils import (
     get_config,
     create_model_and_loss_module,

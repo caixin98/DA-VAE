@@ -132,7 +132,7 @@ DA-VAE/
     │   └── pipeline/             # SD3 inference pipeline (zero-init patch embedder)
     ├── train/                    # Launch scripts and configs for LoRA fine-tuning
     ├── eval/                     # FID / GenEval / CLIP Score evaluation
-    └── data/                     # Data loaders (PIAT, local image, WebDataset)
+    └── data/                     # Data loaders (local image, WebDataset)
 ```
 
 ## Usage
@@ -156,7 +156,7 @@ bash run_inference.sh configs/lightningdit_xl_davae_f32d128_detail_align_mean_lo
 
 ```bash
 python evaluate_tokenizer.py \
-    --config_path tokenizer/configs/da_f16d32_piat_detail_align_mean.yaml \
+    --config_path tokenizer/configs/da_f16d32_detail_align_mean.yaml \
     --model_type davae \
     --data_path /path/to/imagenet/val \
     --output_path /tmp/davae_results

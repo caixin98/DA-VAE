@@ -103,7 +103,7 @@ lightning:
 
   logger:
     name: wandb
-    project: davae-dc-f16d32-piat-diff-align-mean
+    project: davae-dc-f16d32-diff-align-mean
     entity: ${env:WANDB_ENTITY,your-entity}
     version: main
 

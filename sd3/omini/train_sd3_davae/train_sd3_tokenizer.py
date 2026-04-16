@@ -85,7 +85,6 @@ def main():
         model_config=model_config,
     )
 
-    # Choose dataloader based on config: prefer HF or PIAT; only use single-sample overfit when explicitly requested
     hf_conf = data_config.get("hf_dataset")
     if hf_conf:
         train_loader = create_hf_text2image_dataloader(
@@ -109,41 +108,31 @@ def main():
 
         if use_overfit:
             image_path = os.path.join(image_dir, "sample.png")
-            try:
-                from PIL import Image
-                from torchvision import transforms as T
-                target_size = int(data_config.get("base_size", 1024))
-                pil = Image.open(image_path).convert("RGB")
-                tfm = T.Compose([
-                    T.Resize(target_size, interpolation=T.InterpolationMode.BICUBIC),
-                    T.CenterCrop(target_size),
-                    T.ToTensor(),
-                ])
-                image_tensor = tfm(pil).unsqueeze(0)
-                fixed_prompt = os.environ.get("MODEL_FIXED_PROMPT") or model_config.get("fixed_train_prompt", "")
-                batch = {"image": image_tensor, "strText": [fixed_prompt]}
-                train_loader = batch
-                print(f"[TOK][Data] Using single-sample batch from {image_path} (size={target_size})")
-            except Exception as e:
-                print(f"[TOK][Data] Single-sample path failed ({e}); falling back to local simple dataloader")
-                try:
-                    from data.piat_loader import create_local_simple_dataloader  # type: ignore
-                    train_loader = create_local_simple_dataloader(
-                        image_folder_path=image_dir,
-                        target_size=int(data_config.get("base_size", 1024)),
-                        batch_size=1,
-                        num_workers=0,
-                        max_samples=1,
-                        shuffle=True,
-                        load_text=False,
-                    )
-                except Exception:
-                    from data.piat_loader import create_train_dataloader  # type: ignore
-                    train_loader = create_train_dataloader(SimpleConfig(data_config))
+            from PIL import Image
+            from torchvision import transforms as T
+            target_size = int(data_config.get("base_size", 1024))
+            pil = Image.open(image_path).convert("RGB")
+            tfm = T.Compose([
+                T.Resize(target_size, interpolation=T.InterpolationMode.BICUBIC),
+                T.CenterCrop(target_size),
+                T.ToTensor(),
+            ])
+            image_tensor = tfm(pil).unsqueeze(0)
+            fixed_prompt = os.environ.get("MODEL_FIXED_PROMPT") or model_config.get("fixed_train_prompt", "")
+            batch = {"image": image_tensor, "strText": [fixed_prompt]}
+            train_loader = batch
+            print(f"[TOK][Data] Using single-sample batch from {image_path} (size={target_size})")
         else:
-            from data.piat_loader import create_train_dataloader  # type: ignore
-            train_loader = create_train_dataloader(SimpleConfig(data_config))
-            print("[TOK][Data] Using PIAT train dataloader for local training")
+            from data.local_image_loader import create_local_train_dataloader
+            train_loader = create_local_train_dataloader(
+                image_dir=image_dir,
+                batch_size=int(lt.get("batch_size", 1)),
+                num_workers=int(lt.get("num_workers", 0)),
+                max_samples=lt.get("max_samples"),
+                seed=42,
+                downsample_factor=int(lt.get("downsample_factor", 2)),
+            )
+            print(f"[TOK][Data] Using local image dataloader from {image_dir}")
 
     # Check for resume checkpoint
     resume_from_checkpoint = training_config.get("resume_from_checkpoint")

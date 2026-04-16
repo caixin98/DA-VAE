@@ -4,7 +4,7 @@
 ckpt_path: '/path/to/your/checkpoint.pt'
 
 data:
-  data_path: '/path/to/imagenet/latents/da_f16d32_piat_detail_align_mean/imagenet_train_512/'
+  data_path: '/path/to/imagenet/latents/da_f16d32_detail_align_mean/imagenet_train_512/'
   fid_reference_file: '/path/to/VIRTUAL_imagenet512_labeled.npz'
   image_size: 512
   num_classes: 1000
@@ -13,7 +13,7 @@ data:
   latent_multiplier: 1.0
 
 vae:
-  model_name: 'da_f16d32_piat_detail_align_mean'
+  model_name: 'da_f16d32_detail_align_mean'
   downsample_ratio: 32
 
 model:

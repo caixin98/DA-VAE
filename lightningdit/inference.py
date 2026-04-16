@@ -157,7 +157,7 @@ def do_sample(train_config, accelerator, ckpt_path=None, cfg_scale=None, model=N
         vae_cfg = train_config.get("vae", {})
         data_cfg = train_config.get("data", {})
         image_size = int(data_cfg.get("image_size", 256))
-        model_name = vae_cfg.get("model_name", "da_f16d32_piat_align_mean")
+        model_name = vae_cfg.get("model_name", "da_f16d32_align_mean")
         variant = str(vae_cfg.get("variant", "")).lower()
         if not variant:
             variant = "davae" if model_name.lower().startswith("dc") else "vavae"

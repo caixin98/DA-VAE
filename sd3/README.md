@@ -22,7 +22,7 @@ sd3/
 │   ├── diffusion/             # Gaussian diffusion utilities
 │   └── flux/                  # SD3 VAE integration
 ├── utils/                     # Training utilities (DA-VAE specific)
-├── data/                      # Data loaders (PIAT, local image, WebDataset)
+├── data/                      # Data loaders (local image, WebDataset)
 ├── davae/                     # DA-VAE tokenizer training
 │   ├── scripts/train_davae.py # Training entry point
 │   └── configs/               # Training configs
